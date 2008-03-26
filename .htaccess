@@ -1,0 +1,22 @@
+#
+# Apache/site settings:
+#
+
+# Customized server error messages:
+ErrorDocument 404 /index.php
+
+# Set the default handler to index.php:
+DirectoryIndex index.php
+
+# Various rewrite rules
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  #Changes RewriteBase
+  #RewriteBase /phpkrm
+
+  # Rewrite URLs of the form 'index.php?q=x':
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+</IfModule>
