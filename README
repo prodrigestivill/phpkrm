@@ -1,14 +1,13 @@
 Usage
 -----
-
 -http://localhost/PATH/ List all keyrings
--http://localhost/PATH/?q=KEYRING/download Download the keyring in ASCII mode
+-http://localhost/PATH/?q=KEYRING/KEYID Download the key in ASCII mode
+-http://localhost/PATH/?q=KEYRING/download Download all the keyring in ASCII mode
 -http://localhost/PATH/?q=KEYRING/print Full list of all keys in KEYRING in text mode
--http://localhost/PATH/?q=KEYRING/refresh Synchronize with keyserver to refresh keys UID's and optionaly send all keys to it 
+-http://localhost/PATH/?q=KEYRING/refresh Synchronize with keyserver to refresh keys UID's and optionaly send all keys to it
 
 Install
 -------
-
 -Descompress in a empty web folder
 -Configure config.php
 -For Rewrite:
@@ -16,7 +15,7 @@ Install
 --Configre RewriteBase at .htaccess
 -Create the keyrings folder with permisions of www
 -Create empty files in previus folder with the name of keyrings ownered by www
--Add to crontab "wget http://localhost/PATH/?q=KEYRING/refresh" to sync to keyserver to refresh keys UID's and optionaly send all keys to it
+-Add to crontab "wget http://localhost/PATH/?q=KEYRING/refresh" to sync with keyserver to refresh keys UID's and optionaly send all keys to it
 
 Requieres
 ---------
