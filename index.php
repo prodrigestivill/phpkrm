@@ -2,18 +2,12 @@
 /*
  * PHP-Web Keyring admin using GPG command line.
  *
- * Copyright 2005 Pau Rodriguez-Estivill<ensllegim@gmail.com>
+ * Copyright 2005 Pau Rodriguez-Estivill <prodrigestivill@gmail.com>
  *
  * This software is licensed under the GNU General Public License.
  * See COPYING for details.
  */
-// BEGIN OF CONFIGURATION
-$gpgbin="/usr/local/bin/gpg";
-$keyserver=""; //Specify FQDN if you want to syncronize with a keyserver
-$sendkeyserver=""; //Specify FQDN if you want to send new keys to a keyserver
-$dbpath="/var/keyrings/"; //Where to save the keyrings with end /
-$basehref="";//Path in HTTP to use if you use rewrite else don't use.
-// END OF CONFIGURATION
+require('config.php');
 $pastekey=$_POST['pastekey'];
 $filekey=$_FILES['upkey']['tmp_name'];
 $q=$_GET['q'];
@@ -128,6 +122,7 @@ echo $keyringid." keyring"
        "/pub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/pub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
+       "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/sub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/sub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/sub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
@@ -141,6 +136,7 @@ echo $keyringid." keyring"
        "</ul><ul><li><s><b><a title=\"[REVOCKED]\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
        "</ul><ul><li><s><b><a title=\"[EXPIRED]\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
        "</ul><ul><li><b><a href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</li>",
+       "</ul><ul><li><b><a href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> (\\5/\\6) [\\2bits]</li>",
        "<ul><li><s><i><a title=\"[REVOCKED]\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></s></li></ul>",
        "<ul><li><s><i><a title=\"[EXPIRED]\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></s></li></ul>",
        "<ul><li><i><a title=\"\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></li></ul>",
@@ -172,7 +168,7 @@ echo $keyringid." keyring"
 <br />Upload your file directly: <input type='file' name='upkey' /><br />
 <input type='submit' /></form><br />
 <hr width='75%' /><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
-<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://asterx.upc.es/keyrings/source/">avaliable</a>.</i></font>
+<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</i></font>
 </center></p></body></html>
 <?
 }else{
@@ -196,7 +192,7 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
 </ul><br /></p><p>
 <hr width='75%' /><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
-<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://asterx.upc.es/keyrings/source/">avaliable</a>.</i></font>
+<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</i></font>
 </center></p></body></html>
 <?
 }

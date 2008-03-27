@@ -2,8 +2,10 @@ Install
 -------
 
 -Descompress in a empty web folder
--Configure first lines at index.php
--Configure only basehref if you want to use rewrite.
+-Configure config.php
+-For Rewrite:
+--Configure basehref at configure file
+--Configre RewriteBase at .htaccess
 -Create the keyrings folder with permisions of www
 -Create empty files in previus folder with the name of keyrings ownered by www
 -Add wget http://localhost/PATH/?q=KEYRING/refresh to sync to keyserver to refresh keys UID's and optional send all keys to it.
