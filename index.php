@@ -74,9 +74,10 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
       print("Error using gpg. Contact admin.");
 
 }elseif ($keyringid!=""){
+   Header("Content-type: Content-Type: text/html; charset=UTF-8");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><title>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>
 <?
 echo $keyringid." Keyring"
 ?>
@@ -167,14 +168,13 @@ echo $keyringid." keyring"
 <textarea name='pastekey' cols='55' rows='6'></textarea>
 <br />Upload your file directly: <input type='file' name='upkey' /><br />
 <input type='submit' /></form><br />
-<hr width='75%' /><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
-<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</i></font>
-</center></p></body></html>
 <?
+   print_footer();
 }else{
+   Header("Content-type: Content-Type: text/html; charset=UTF-8");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><title>Keyrings</title>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Keyrings</title>
 <style type="text/css" media="all">
 <?
 print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
@@ -191,6 +191,12 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
      print("Can't list directory.");
 ?>
 </ul><br /></p><p>
+<?
+     print_footer();
+}
+
+function print_footer(){
+?>
 <hr width='75%' /><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
 <br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</i></font>
 </center></p></body></html>
