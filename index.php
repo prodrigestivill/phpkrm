@@ -84,12 +84,12 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head><title><? echo $keyringid; ?> Keyring</title>
-<style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>style.css';</style></head><body>
+<style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>css/style.css';</style></head><body>
 <h1><? echo $keyringid; ?> keyring</h1><br />
 <?
    }
 
-   print("<p><blockquote><a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download keyring</a>&nbsp;|&nbsp;<a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
+   print("<p><blockquote><a class='download' href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download all</a>&nbsp;|&nbsp;<a class='print' href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
 
    //Save pasted key
    if ($pastekey!="") {
@@ -132,10 +132,10 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    );
    $replacements = array(
        "",
-       "</ul><ul><li><s><b><a title=\"[REVOCKED]\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
-       "</ul><ul><li><s><b><a title=\"[EXPIRED]\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
-       "</ul><ul><li><b><a href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</li>",
-       "</ul><ul><li><b><a href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> (\\5/\\6) [\\2bits]</li>",
+       "</ul><ul><li><s><b><span class='uid' title=\"[REVOCKED]\\4\">\\9</span></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
+       "</ul><ul><li><s><b><span class='uid'title=\"[EXPIRED]\\4\">\\9</span></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
+       "</ul><ul><li><b><a class='uid' href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</li>",
+       "</ul><ul><li><b><a class='uid' href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> (\\5/\\6) [\\2bits]</li>",
        "<ul><li><s><i><a title=\"[REVOCKED]\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></s></li></ul>",
        "<ul><li><s><i><a title=\"[EXPIRED]\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></s></li></ul>",
        "<ul><li><i><a title=\"\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></li></ul>",
@@ -177,7 +177,7 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head><title>Keyrings</title>
-<style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>style.css';</style></head><body>
+<style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>css/style.css';</style></head><body>
 <h1>List of keyrings</h1><br />
 <?
    }
@@ -185,7 +185,7 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    if ($handle = opendir($dbpath)) {
     while (false !== ($lkrid = readdir($handle))) {
      if (preg_match("/^[\w]*$/", $lkrid))
-         print("<li><a href='".(($basehref=="") ? "?q=" : $basehref).$lkrid."'>".$lkrid." keyring</a></li>");
+         print("<li><a class='keyring' href='".(($basehref=="") ? "?q=" : $basehref).$lkrid."'>".$lkrid." keyring</a></li>");
     }
    closedir($handle);
    }else
