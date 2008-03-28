@@ -59,9 +59,16 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    Header("Content-type: text/plain; charset=UTF-8");
    if (file_exists($dbpath.$keyringid.".txt"))
        include($dbpath.$keyringid.".txt");
-   $keyid=substr($q,strlen($keyringid)+1);
+   else
+       print($keyringid." phpkrm keyring: ".$url."\n");
    $torun=$gpgbin." --display-charset utf-8 --fingerprint --no-default-keyring --keyring ".$keyringid." --list-public-keys";
-   system($torun,$result);
+   $handle=popen($torun,"r");
+   if (!feof($handle))
+      fgets($handle,4096); //Fist line lost
+   while( !feof($handle) )
+      print(preg_replace("/\<(.*)@(.*)\.(.*)\>/","<\\1 AT \\2 DOT \\3>",fgets($handle,4096)));
+   pclose($handle);
+
 
 }elseif ($keyringid!="" && strlen($q)>(strlen($keyringid)+1)){
    //Download a key
@@ -90,12 +97,12 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
 <?
    }
 ?>
-<blockquote><p><a class="download" href="<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>/print">Printing version</a></p></blockquote><p><br />
-<?
+<blockquote><p><a class="download" href="<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>/print">Printing version</a></p></blockquote>
+<?   
    //Save pasted key
    if ($pastekey!="") {
-     $filekey = tempnam("/tmp", "pastekey.asc");
-     $fp = fopen($filekey, "w");
+     $filekey=tempnam("/tmp", "pastekey.asc");
+     $fp=fopen($filekey, "w");
      fwrite($fp, $pastekey);
      fclose($fp);
    }
@@ -112,13 +119,12 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
         if ($result!=0)
           print("<p class=\"error\">Error sending to the keyserver. Contact admin.</p>");
      }
-     print("<p class=\"info\">Key added</p>"); 
+     print("<p class=\"info\">Key added<br /></p>"); 
    }
-   
+
    // List Keys
    $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
    $fistpub=TRUE;
-   print("</p>");
    $handle=popen($torun,"r");
    while( !feof($handle) )
       $fistpub=print_keyring(htmlspecialchars(fgets($handle,4096)),$basehref,$keyringid,$fistpub);
@@ -155,8 +161,8 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
 <?
    }
    print("<ul>");
-   if ($handle = opendir($dbpath)) {
-    while (false !== ($lkrid = readdir($handle))) {
+   if ($handle=opendir($dbpath)) {
+    while (false !== ($lkrid=readdir($handle))) {
      if (preg_match("/^[\w]*$/", $lkrid))
          print("<li><a class='keyring' href='".(($basehref=="") ? "?q=" : $basehref).$lkrid."'>".$lkrid." keyring</a></li>");
     }
@@ -170,12 +176,12 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
 }
 
 function tag_namefield($tag,$param,$namem){
-   $noname = stristr($namem, " &lt;");
+   $noname=stristr($namem, " &lt;");
    if ($noname==FALSE)
-      $name = $namem;
+      $name=$namem;
    else
-      $name = substr($namem, 0, -(strlen($noname)));
-   return "<".$tag." ".$param.">".$name."</".$tag.">".preg_replace("/(.*)@(.*)\.(.*)/","\\1 at \\2 dot \\3",$noname, 1);
+      $name=substr($namem, 0, -(strlen($noname)));
+   return "<".$tag." ".$param.">".$name."</".$tag.">".preg_replace("/(.*)@(.*)\.(.*)/","\\1 AT \\2 DOT \\3",$noname,1);
 }
 
 function print_keyring($line,$basehref,$keyringid,$ret){
@@ -190,7 +196,7 @@ function print_keyring($line,$basehref,$keyringid,$ret){
          if ($rev=="r" || $rev=="e")
             print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">".tag_namefield("span","class=\"pubname\" title=\"".(($rev=="r") ? "[REVOCKED]" : "[EXPIRED]").$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]</span>");
          else
-            print(tag_namefield("a","class=\"pubname\" href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid.$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]");
+            print(tag_namefield("a","class=\"pubname\" href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/".$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]");
          print("</li>");
          $fistpub=FALSE;
          break;
