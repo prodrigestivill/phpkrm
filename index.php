@@ -55,7 +55,9 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    }
 }elseif ($keyringid!="" && $keyserver!="" && strlen($q)>6 && substr($q,-6)=="/print") {
    //List of keys
-   Header("Content-type: text/plain; charset=UTF-8"); 
+   Header("Content-type: text/plain; charset=UTF-8");
+   if (file_exists($dbpath.$keyringid.".txt"))
+       include($dbpath.$keyringid.".txt");
    $keyid=substr($q,strlen($keyringid)+1);
    $torun=$gpgbin." --fingerprint --no-default-keyring --keyring ".$keyringid." --list-public-keys";
    system($torun,$result);
@@ -85,13 +87,14 @@ echo $keyringid." Keyring"
 <?
 print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
-</style></head><body><p><h1>
+</style></head><body><p>
 <?
-echo $keyringid." keyring"
-?>
-</h1><br />
-<?
-   print("<blockquote><a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download keyring</a></blockquote><br />");
+   if (file_exists($dbpath.$keyringid.".php"))
+       include($dbpath.$keyringid.".php");
+   else
+       print("<h1>".$keyringid." keyring</h1><br />");
+
+   print("<blockquote><a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download keyring</a>&nbsp;|&nbsp;<a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
 
    //Save pasted key
    if ($pastekey!="") {
@@ -120,16 +123,16 @@ echo $keyringid." keyring"
    $torun=$gpgbin." --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
    $patterns = array(
        "/tru\:(.*?)*$/",
-       "/pub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/pub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
+       "/pub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
+       "/pub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
+       "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/sub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/sub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
        "/sub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/uid\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)$/",
-       "/uid\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)$/",
-       "/uid\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\<(.*?)\@(.*?)\>(.*?)\:(.*?)$/",
+       "/uid\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)$/",
+       "/uid\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)$/",
+       "/uid\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)$/",
        "/uat\:(.*?)*$/"
    );
    $replacements = array(
@@ -150,7 +153,7 @@ echo $keyringid." keyring"
    $handle=popen($torun,"r");
    while( !feof($handle) )
    {
-       print(preg_replace($patterns,$replacements, fgets($handle,4096)));
+       print(preg_replace($patterns,$replacements, htmlspecialchars(fgets($handle,4096))));
    }
    pclose($handle);
    print ("</ul>");
@@ -179,8 +182,13 @@ echo $keyringid." keyring"
 <?
 print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
-</style></head><body><p><h1>List of keyrings</h1><br /><ul>
+</style></head><body>
 <?
+   if (file_exists("list.php"))
+       include("list.php");
+   else
+       print("<p><h1>List of keyrings</h1><br />");
+   print("<ul>");
    if ($handle = opendir($dbpath)) {
     while (false !== ($lkrid = readdir($handle))) {
      if (preg_match("/^[\w]*$/", $lkrid))
