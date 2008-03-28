@@ -84,14 +84,14 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    }else{
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><title><? echo $keyringid; ?> Keyring</title>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title><? echo $keyringid; ?> Keyring</title>
 <style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>css/style.css';</style></head><body>
-<h1><? echo $keyringid; ?> keyring</h1><br />
+<h1><? echo $keyringid; ?> keyring</h1>
 <?
    }
-
-   print("<p><blockquote><a class='download' href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download all</a>&nbsp;|&nbsp;<a class='print' href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
-
+?>
+<blockquote><p><a class="download" href="<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>/print">Printing version</a></p></blockquote><p><br />
+<?
    //Save pasted key
    if ($pastekey!="") {
      $filekey = tempnam("/tmp", "pastekey.asc");
@@ -110,49 +110,23 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
         $torun=$gpgbin." --send-keys --keyserver ".$sendkeyserver." --no-default-keyring --keyring ".$keyringid;
         system($torun,$result);
         if ($result!=0)
-          print("<i>Error sending to the keyserver. Contact admin.</i>");
+          print("<p class=\"error\">Error sending to the keyserver. Contact admin.</p>");
      }
-     print("<b>Key added</b><br />"); 
+     print("<p class=\"info\">Key added</p>"); 
    }
    
    // List Keys
    $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
-   $patterns = array(
-       "/tru\:(.*?)*$/",
-       "/pub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/pub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/pub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/sub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/sub\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/sub\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
-       "/uid\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)$/",
-       "/uid\:e(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)$/",
-       "/uid\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)$/",
-       "/uat\:(.*?)*$/"
-   );
-   $replacements = array(
-       "",
-       "</ul><ul><li><s><b><span class='uid' title=\"[REVOCKED]\\4\">\\9</span></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
-       "</ul><ul><li><s><b><span class='uid'title=\"[EXPIRED]\\4\">\\9</span></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</s></li>",
-       "</ul><ul><li><b><a class='uid' href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6) [\\2bits]</li>",
-       "</ul><ul><li><b><a class='uid' href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/\\4\" title=\"\\4\">\\9</a></b> (\\5/\\6) [\\2bits]</li>",
-       "<ul><li><s><i><a title=\"[REVOCKED]\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></s></li></ul>",
-       "<ul><li><s><i><a title=\"[EXPIRED]\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></s></li></ul>",
-       "<ul><li><i><a title=\"\\4\">Subkey</a> (\\5/\\6) [\\2bits]</i></li></ul>",
-       "<ul><li><i><s><b><a title=\"[REVOCKED]\\7\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6)</s></i></li></ul>",
-       "<ul><li><i><s><b><a title=\"[EXPIRED]\\7\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6)</s></i></li></ul>",
-       "<ul><li><i><b><a title=\"\\7\">\\9</a></b> &lt;\\10 &quot;AT&quot; \\11&gt; (\\5/\\6)</i></li></ul>",
-       ""
-   );
-   print("</p><ul>");
+   $fistpub=TRUE;
+   print("</p>");
    $handle=popen($torun,"r");
    while( !feof($handle) )
-   {
-       print(preg_replace($patterns,$replacements, htmlspecialchars(fgets($handle,4096))));
-   }
+      $fistpub=print_keyring(htmlspecialchars(fgets($handle,4096)),$basehref,$keyringid,$fistpub);
    pclose($handle);
-   print ("</ul>");
+   if ($fistpub==FALSE)
+      print("</ul>");
+
+
 
 /*   echo "<pre>";
    $torun=$gpgbin." --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --no-default-keyring --keyring ".$keyringid;
@@ -160,13 +134,11 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    echo "</pre>";*/
 
 ?>
-<p>Paste an ascii-armored of the key(s) that you wish to add to the keyring.</p><p>
-<?
-   print("<form method='post' action='".(($basehref=="") ? "?q=" : $basehref).$keyringid."' enctype='multipart/form-data'>");
-?>
+<p>Paste an ascii-armored of the key(s) that you wish to add to the keyring.</p>
+<form method='post' action='<? echo (($basehref=="") ? "?q=" : $basehref).$keyringid; ?>' enctype='multipart/form-data'><p>
 <textarea name='pastekey' cols='55' rows='6'></textarea>
 <br />Upload your file directly: <input type='file' name='upkey' /><br />
-<input type='submit' /></form><br /></p>
+<input type='submit' /><br /></p></form>
 <?
    print_footer();
 }else{
@@ -177,12 +149,12 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    }else{
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><title>Keyrings</title>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>List of keyrings</title>
 <style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>css/style.css';</style></head><body>
 <h1>List of keyrings</h1>
 <?
    }
-   print("<p><ul>");
+   print("<ul>");
    if ($handle = opendir($dbpath)) {
     while (false !== ($lkrid = readdir($handle))) {
      if (preg_match("/^[\w]*$/", $lkrid))
@@ -190,18 +162,67 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
     }
    closedir($handle);
    }else
-     print("Can't list directory.");
+     print("<li class=\"error\">Can't list directory.</li>");
 ?>
-</ul><br /></p>
+</ul><p><br /></p>
 <?
      print_footer();
 }
 
+function tag_namefield($tag,$param,$namem){
+   $noname = stristr($namem, " &lt;");
+   if ($noname==FALSE)
+      $name = $namem;
+   else
+      $name = substr($namem, 0, -(strlen($noname)));
+   return "<".$tag." ".$param.">".$name."</".$tag.">".preg_replace("/(.*)@(.*)\.(.*)/","\\1 at \\2 dot \\3",$noname, 1);
+}
+
+function print_keyring($line,$basehref,$keyringid,$ret){
+   $fistpub=$ret;
+   $field=split(":",$line);
+   switch($field[0]){
+      case "pub":
+         if ($fistpub==FALSE)
+            print("</ul>");
+         print("\n<ul><li class=\"pub\">");
+         $rev=substr($field[1], 0, 1);
+         if ($rev=="r" || $rev=="e")
+            print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">".tag_namefield("span","class=\"pubname\" title=\"".(($rev=="r") ? "[REVOCKED]" : "[EXPIRED]").$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]</span>");
+         else
+            print(tag_namefield("a","class=\"pubname\" href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid.$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]");
+         print("</li>");
+         $fistpub=FALSE;
+         break;
+      case "sub":
+         print("\n<li><ul><li class=\"sub\">");
+         $rev=substr($field[1], 0, 1);
+         if ($rev=="r" || $rev=="e")
+            print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">");
+         print("<span class=\"subname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[4]."\">Subkey</span> (".$field[5]."/".$field[6].") [".$field[2]."bits]");
+         if ($rev=="r" || $rev=="e")
+            print("</span>");
+         print("</li></ul></li>");
+         break;
+      case "uid":
+         print("\n<li><ul><li class=\"uid\">");
+         $rev=substr($field[1], 0, 1);
+         if ($rev=="r" || $rev=="e")
+            print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">");
+         print(tag_namefield("span","class=\"uidname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[7]."\"",$field[9])." (".$field[5]."/".$field[6].")");
+         if ($rev=="r" || $rev=="e")
+            print("</span>");
+         print("</li></ul></li>");
+         break;
+   }
+   return $fistpub;
+}
+
 function print_footer(){
 ?>
-<hr width='75%' /><p><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
-<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</i></font>
-</center></p></body></html>
+<hr /><p class='footer'>Keyring manager created by &copy;Pau Rodriguez-Estivill
+<br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</p>
+</body></html>
 <?
 }
 ?>

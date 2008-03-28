@@ -8,14 +8,17 @@ body {
   background-color: #fff;
   font: 76% Verdana, Arial, Helvetica, sans-serif;
 }
+
 h1 {
   font-size: 1.3em;
   margin: 0.5em;
 }
+
 a {
   text-decoration: none;
   font-weight: bold;
 }
+
 a:link {
   color: #39c;
   text-decoration: underline;
@@ -23,6 +26,11 @@ a:link {
 a:visited {
   color: #369;
   text-decoration: underline;
+}
+
+hr {
+  border: 1;
+  width: 75%;
 }
 
 li {
@@ -44,12 +52,39 @@ li {
   padding-left: 18px;
 }
 
-.uid {
+.pubname {
   background: url(user_icon.gif) center left no-repeat;
   padding-left: 18px;
+  font-weight: bold;
 }
 
-a.uid:hover {
+a.pubname:hover {
   background: url(save_icon.gif) center left no-repeat;
-  padding-left: 18px;
+}
+
+.sub, .uid {
+  font-style: italic;
+}
+
+.subname, .uidname {
+  font-weight: bold;
+}
+
+.rev, .exp {
+  text-decoration: line-through;
+}
+
+.info {
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  font-style: italic;
+}
+
+.footer {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9em;
 }
