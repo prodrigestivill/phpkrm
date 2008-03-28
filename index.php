@@ -89,9 +89,11 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
 </style></head><body><p>
 <?
-   if (file_exists($dbpath.$keyringid.".php"))
+   if (file_exists($dbpath.$keyringid.".php")){
+       print("\n<!-- Begin included file ".$dbpath.$keyringid.".php -->\n");
        include($dbpath.$keyringid.".php");
-   else
+       print("\n<!-- End included file ".$dbpath.$keyringid.".php -->\n");
+   }else
        print("<h1>".$keyringid." keyring</h1><br />");
 
    print("<blockquote><a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download keyring</a>&nbsp;|&nbsp;<a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
@@ -184,9 +186,11 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
 </style></head><body>
 <?
-   if (file_exists("list.php"))
+   if (file_exists("list.php")){
+       print("\n<!-- Begin included file list.php -->\n");
        include("list.php");
-   else
+       print("\n<!-- End included file list.php -->\n");
+   }else
        print("<p><h1>List of keyrings</h1><br />");
    print("<ul>");
    if ($handle = opendir($dbpath)) {
