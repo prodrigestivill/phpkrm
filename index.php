@@ -1,6 +1,7 @@
 <? 
 /*
- * PHP-Web Keyring admin using GPG command line.
+ * PHPkrm is a Web-based GnuPG keyring manager.
+ * To administrate the keyrings use the gpg command line tool.
  *
  * Copyright 2005 Pau Rodriguez-Estivill <prodrigestivill@gmail.com>
  *
