@@ -55,7 +55,7 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    }
 }elseif ($keyringid!="" && $keyserver!="" && strlen($q)>6 && substr($q,-6)=="/print") {
    //List of keys
-   Header("Content-type: text/plain"); 
+   Header("Content-type: text/plain; charset=UTF-8"); 
    $keyid=substr($q,strlen($keyringid)+1);
    $torun=$gpgbin." --fingerprint --no-default-keyring --keyring ".$keyringid." --list-public-keys";
    system($torun,$result);
@@ -74,10 +74,10 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
       print("Error using gpg. Contact admin.");
 
 }elseif ($keyringid!=""){
-   Header("Content-type: Content-Type: text/html; charset=UTF-8");
+   Header("Content-type: text/html; charset=UTF-8");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>
+<html><head><title>
 <?
 echo $keyringid." Keyring"
 ?>
@@ -171,10 +171,10 @@ echo $keyringid." keyring"
 <?
    print_footer();
 }else{
-   Header("Content-type: Content-Type: text/html; charset=UTF-8");
+   Header("Content-type: text/html; charset=UTF-8");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Keyrings</title>
+<html><head><title>Keyrings</title>
 <style type="text/css" media="all">
 <?
 print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
