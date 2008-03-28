@@ -184,14 +184,14 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 <?
 print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
-</style></head><body>
+</style></head><body><p>
 <?
    if (file_exists("list.php")){
        print("\n<!-- Begin included file list.php -->\n");
        include("list.php");
        print("\n<!-- End included file list.php -->\n");
    }else
-       print("<p><h1>List of keyrings</h1><br />");
+       print("<h1>List of keyrings</h1><br />");
    print("<ul>");
    if ($handle = opendir($dbpath)) {
     while (false !== ($lkrid = readdir($handle))) {
