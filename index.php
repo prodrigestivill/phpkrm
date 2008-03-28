@@ -77,26 +77,19 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
 
 }elseif ($keyringid!=""){
    Header("Content-type: text/html; charset=UTF-8");
+   if (file_exists($dbpath.$keyringid.".php")){
+       include($dbpath.$keyringid.".php");
+       print("\n<!-- End header file ".$dbpath.$keyringid.".php -->\n");
+   }else{
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html><head><title>
+<html><head><title><? echo $keyringid; ?> Keyring</title>
+<style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>style.css';</style></head><body>
+<h1><? echo $keyringid; ?> keyring</h1><br />
 <?
-echo $keyringid." Keyring"
-?>
-</title><style type="text/css" media="all">
-<?
-print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
-?>
-</style></head><body><p>
-<?
-   if (file_exists($dbpath.$keyringid.".php")){
-       print("\n<!-- Begin included file ".$dbpath.$keyringid.".php -->\n");
-       include($dbpath.$keyringid.".php");
-       print("\n<!-- End included file ".$dbpath.$keyringid.".php -->\n");
-   }else
-       print("<h1>".$keyringid." keyring</h1><br />");
+   }
 
-   print("<blockquote><a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download keyring</a>&nbsp;|&nbsp;<a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
+   print("<p><blockquote><a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/download'>Download keyring</a>&nbsp;|&nbsp;<a href='".(($basehref=="") ? "?q=" : $basehref).$keyringid."/print'>Printing version</a></blockquote><br />");
 
    //Save pasted key
    if ($pastekey!="") {
@@ -172,27 +165,23 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
 ?>
 <textarea name='pastekey' cols='55' rows='6'></textarea>
 <br />Upload your file directly: <input type='file' name='upkey' /><br />
-<input type='submit' /></form><br />
+<input type='submit' /></form><br /></p>
 <?
    print_footer();
 }else{
    Header("Content-type: text/html; charset=UTF-8");
+   if (file_exists("list.php")){
+       include("list.php");
+       print("\n<!-- End header file list.php -->\n");
+   }else{
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head><title>Keyrings</title>
-<style type="text/css" media="all">
+<style type="text/css" media="all">@import '<? echo (($basehref=="") ? "" : $basehref); ?>style.css';</style></head><body>
+<h1>List of keyrings</h1><br />
 <?
-print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
-?>
-</style></head><body><p>
-<?
-   if (file_exists("list.php")){
-       print("\n<!-- Begin included file list.php -->\n");
-       include("list.php");
-       print("\n<!-- End included file list.php -->\n");
-   }else
-       print("<h1>List of keyrings</h1><br />");
-   print("<ul>");
+   }
+   print("<p><ul>");
    if ($handle = opendir($dbpath)) {
     while (false !== ($lkrid = readdir($handle))) {
      if (preg_match("/^[\w]*$/", $lkrid))
@@ -202,14 +191,14 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
    }else
      print("Can't list directory.");
 ?>
-</ul><br /></p><p>
+</ul><br /></p>
 <?
      print_footer();
 }
 
 function print_footer(){
 ?>
-<hr width='75%' /><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
+<hr width='75%' /><p><center><i><font size=-3>Keyring manager created by &copy;Pau Rodriguez-Estivill
 <br />PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</i></font>
 </center></p></body></html>
 <?
