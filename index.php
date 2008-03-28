@@ -59,7 +59,7 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
    if (file_exists($dbpath.$keyringid.".txt"))
        include($dbpath.$keyringid.".txt");
    $keyid=substr($q,strlen($keyringid)+1);
-   $torun=$gpgbin." --fingerprint --no-default-keyring --keyring ".$keyringid." --list-public-keys";
+   $torun=$gpgbin." --display-charset utf-8 --fingerprint --no-default-keyring --keyring ".$keyringid." --list-public-keys";
    system($torun,$result);
 
 }elseif ($keyringid!="" && strlen($q)>(strlen($keyringid)+1)){
@@ -122,7 +122,7 @@ print("@import '".(($basehref=="") ? "" : $basehref)."style.css';");
    }
    
    // List Keys
-   $torun=$gpgbin." --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
+   $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
    $patterns = array(
        "/tru\:(.*?)*$/",
        "/pub\:r(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\:(.*?)\&lt\;(.*?)\@(.*?)\&gt\;(.*?)\:(.*?)\:(.*?)\:(.*?)$/",
