@@ -31,5 +31,4 @@ Customizations
 TODO
 
     * Make UI to admin keyrings (permisions, add, remove,...)
-    * Make UI compatible to w3c
     * Send encrypted emails to check UID of keys. 
