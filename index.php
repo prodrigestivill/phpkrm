@@ -130,7 +130,7 @@ if ($keyringid!="" && strlen($q)>9 && substr($q,-9)=="/download") {
       $fistpub=print_keyring(htmlspecialchars(fgets($handle,4096)),$basehref,$keyringid,$fistpub);
    pclose($handle);
    if ($fistpub==FALSE)
-      print("</ul>");
+      print("</li></ul>");
 
 
 
@@ -190,35 +190,34 @@ function print_keyring($line,$basehref,$keyringid,$ret){
    switch($field[0]){
       case "pub":
          if ($fistpub==FALSE)
-            print("</ul>");
+            print("</li></ul>");
          print("\n<ul><li class=\"pub\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">".tag_namefield("span","class=\"pubname\" title=\"".(($rev=="r") ? "[REVOCKED]" : "[EXPIRED]").$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]</span>");
          else
             print(tag_namefield("a","class=\"pubname\" href=\"".(($basehref=="") ? "?q=" : $basehref).$keyringid."/".$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]");
-         print("</li>");
          $fistpub=FALSE;
          break;
       case "sub":
-         print("\n<li><ul><li class=\"sub\">");
+         print("\n<ul><li class=\"sub\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">");
          print("<span class=\"subname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[4]."\">Subkey</span> (".$field[5]."/".$field[6].") [".$field[2]."bits]");
          if ($rev=="r" || $rev=="e")
             print("</span>");
-         print("</li></ul></li>");
+         print("</li></ul>");
          break;
       case "uid":
-         print("\n<li><ul><li class=\"uid\">");
+         print("\n<ul><li class=\"uid\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<span class=\"".(($rev=="r") ? "rev" : "exp")."\">");
          print(tag_namefield("span","class=\"uidname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[7]."\"",$field[9])." (".$field[5]."/".$field[6].")");
          if ($rev=="r" || $rev=="e")
             print("</span>");
-         print("</li></ul></li>");
+         print("</li></ul>");
          break;
    }
    return $fistpub;
