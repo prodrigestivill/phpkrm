@@ -27,8 +27,3 @@ Customizations
 
     * The headers can be customized by creating in the keyrings folder ($dbpath) the files named as the keyring name but ending with .php or .txt for html or print version respectively.
     * The headers of the main page with keyrings list can be customized by creating a file named list.php in the same folder as index.php. 
-
-TODO
-
-    * Make UI to admin keyrings (permisions, add, remove,...)
-    * Send encrypted emails to check UID of keys. 
