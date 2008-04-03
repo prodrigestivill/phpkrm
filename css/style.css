@@ -28,13 +28,22 @@ a:visited {
   text-decoration: underline;
 }
 
-hr {
-  border: 1;
-  width: 75%;
-}
-
 li {
   list-style: none;
+}
+
+.keyringoptions {
+  padding-top: 1.3em;
+  padding-left: 3.2em;
+}
+
+.bodykeyring {
+  padding-top: 1.3em;
+}
+
+.formaddkey{
+  padding-top: 1.3em;
+  padding-bottom: 1.3em;
 }
 
 .keyring {
@@ -49,6 +58,11 @@ li {
 
 .print {
   background: url(print_icon.gif) center left no-repeat;
+  padding-left: 18px;
+}
+
+.mail {
+  background: url(mail_icon.gif) center left no-repeat;
   padding-left: 18px;
 }
 
@@ -85,6 +99,9 @@ a.pubname:hover {
 }
 
 .footer {
+  margin: 0% 12% 0% 12%;
+  padding-top: 1em;
+  border-top: 1px solid #000000;
   text-align: center;
   font-style: italic;
   font-size: 0.9em;

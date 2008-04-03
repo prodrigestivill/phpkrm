@@ -15,5 +15,23 @@ $sendkeyserver=""; //Specify FQDN if you want to send new keys to a keyserver
 $dbpath="/var/keyrings/"; //Where to save the keyrings with end /
 $basehref="";//Path in HTTP to use if you use rewrite else don't use.
 
+//Anti-SPAM substitutions in html and txt mode
+$AThtml="<b>&nbsp;&nbsp;AT&nbsp;&nbsp;</b>";
+$DOThtml="<b>&nbsp;&nbsp;DOT&nbsp;&nbsp;</b>";
+$ATtxt="  AT  ";
+$DOTtxt="  DOT  ";
+
+/* Begin reCAPTCHA (optional) - http://recaptcha.net/ */
+//Hide e-mails using capcha (e-mails in text mode disabled)
+//Get the keys at http://mailhide.recaptcha.net/apikey
+$recaptcha_mail_pubkey="";
+$recaptcha_mail_privkey="";
+
+//Protect form submit using CAPCHA
+//Get the keys at http://recaptcha.net/api/getkey
+$recaptcha_form_pubkey="";
+$recaptcha_form_privkey="";
+/* End reCAPTCHA */
+
 /* End of Configuration File */
 ?>
