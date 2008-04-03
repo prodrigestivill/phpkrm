@@ -30,4 +30,4 @@ Customizations
     * The headers of the main page with keyrings list can be customized by creating a file named list.php in the same folder as index.php.
     * Using reCAPTCHA (Anti-SPAM method)
           o Download and save recaptchalib.php in the same folder as index.php.
-          o Configure $recaptcha_pubkey and $recaptcha_privkey the with reCAPTCHA keys.
+          o Configure $recaptcha_* variables with the reCAPTCHA keys.

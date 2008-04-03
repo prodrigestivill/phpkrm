@@ -46,9 +46,6 @@ if ($keyringid!=""){
          case "print":
             main_print($keyringid, $param[1]);
             break;
-         case "mail":
-            main_mail($keyringid, $param[1]);
-            break;
          case "download":
             main_download($keyringid,$param[1]);
             break;
@@ -189,26 +186,6 @@ function main_print($keyringid,$keyid){
    while(!feof($handle))
       print(preg_replace("/ \<(.+)@(.+)\.(.+)\>/",$replacestr,fgets($handle,4096)));
    pclose($handle);
-}
-
-function main_mail($keyringid,$keyid){
-   global $gpgbin,$dbpath,$recaptcha_mail_pubkey,$recaptcha_mail_privkey,$ATtxt,$DOTtxt,$preg_mail;
-   $replacestr=(($recaptcha_mail_pubkey!="" && $recaptcha_mail_privkey!="") ? "" : " <\\1".$ATtxt."\\2".$DOTtxt."\\3>");
-   $torun=$gpgbin." --display-charset utf-8 --fingerprint --no-default-keyring --keyring ".$keyringid." --list-public-keys ".$keyid;
-   $handle=popen($torun,"r");
-   $emails="";
-   while(!feof($handle)){
-      $res=preg_match_all("/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i",fgets($handle,4096),$found);
-      for ($i=0;$i<$res;$i++)
-         $emails.=$found[$i][0].", \n";
-   }
-   pclose($handle);
-   if ($recaptcha_mail_pubkey!="" && $recaptcha_mail_privkey!=""){
-      Header("Location: ".recaptcha_mailhide_url($recaptcha_mail_pubkey,$recaptcha_mail_privkey,$emails),TRUE,307); // 307 Temporary Redirect
-   }else{
-      Header("Content-type: text/plain; charset=UTF-8");
-      print(preg_replace("/(.+)@(.+)\.(.+)/","\\1".$ATtxt."\\2".$DOTtxt."\\3", $emails));
-   }
 }
 
 function get_keyringurl(){
