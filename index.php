@@ -115,7 +115,7 @@ if ($keyringid!=""){
          print("<p class=\"error\">reCAPTCHA said: ".$res->error.".</p>");
       echo recaptcha_get_html($recaptcha_form_pubkey); ?></div>
 <? }?>
-<br /><input type='submit' /><br /></form></div>
+<div class="clear"></div><input type='submit' /><br /></form></div>
 <?
       print_footer();
    }
@@ -270,6 +270,7 @@ function print_header($title){
 
 function print_footer(){
 ?>
+<div class="clear"></div>
 <div class="footer">Keyring manager created by &copy;Pau Rodriguez-Estivill<br />
 PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</div>
 </body></html>
