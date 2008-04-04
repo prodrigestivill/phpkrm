@@ -46,8 +46,13 @@ li {
   padding-bottom: 1.3em;
 }
 
-.formaddkey, .capchaaddkey{
+.formaddkey{
   float: left;
+}
+
+.capchaaddkey{
+  float: left;
+  padding-left: 1.3em;
 }
 
 .keyring {

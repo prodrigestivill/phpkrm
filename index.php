@@ -107,9 +107,9 @@ if ($keyringid!=""){
 </div><div class="addkey">
 <form method='post' action='<? echo $keyringid; ?>' enctype='multipart/form-data'>
 <div class="formaddkey">
-Paste an ascii-armored of the key(s) that you wish to add to the keyring.<br />
-<textarea name='pastekey' cols='55' rows='6'></textarea>
-<br />Upload your file directly: <input type='file' name='upkey' /><br /></div>
+Paste an ascii-armored of the key(s) to add in this keyring:<br />
+<textarea name='pastekey' cols='55' rows='6'></textarea><br />
+Or upload your key file directly: <input type='file' name='upkey' /><br /></div>
 <? if ($recaptcha_form_pubkey!="") { ?>
 <div class="capchaaddkey">
 <?    if ($captchavalid==FALSE)
