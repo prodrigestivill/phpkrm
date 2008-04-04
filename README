@@ -14,7 +14,9 @@ Install
           o Configure $basehref at config.php
           o Configure RewriteBase at .htaccess 
     * Create the keyrings folder ($dbpath) with permissions of www user
-    * Create empty files in the previous folder with the name of keyrings owned by www user (the keyring name must only contain letters and/or numbers)
+    * Create empty files in the previous folder with the name of keyrings
+          o The keyring name must be only alphanumeric and/or the characters -_
+          o Files must be owned by www user 
     * Add to crontab wget http://localhost/PATH/?q=KEYRING/refresh to sync with the keyserver to refresh keys UID's and optionaly send all keys to it 
 
 Requieres
@@ -30,4 +32,4 @@ Customizations
     * The headers of the main page with keyrings list can be customized by creating a file named list.php in the same folder as index.php.
     * Using reCAPTCHA (Anti-SPAM method)
           o Download and save recaptchalib.php in the same folder as index.php.
-          o Configure $recaptcha_* variables with the reCAPTCHA mail keys and form keys.
+          o Configure $recaptcha_* variables with the reCAPTCHA mail keys and form keys. 
