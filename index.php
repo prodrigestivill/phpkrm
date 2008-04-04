@@ -104,17 +104,19 @@ if ($keyringid!=""){
       if ($fistpub==FALSE)
          print("</li></ul>");
 ?>
-</div><div class="formaddkey">
-<p>Paste an ascii-armored of the key(s) that you wish to add to the keyring.</p>
-<form method='post' action='<? echo $keyringid; ?>' enctype='multipart/form-data'><p>
+</div><div class="addkey">
+<form method='post' action='<? echo $keyringid; ?>' enctype='multipart/form-data'>
+<div class="formaddkey">
+<p>Paste an ascii-armored of the key(s) that you wish to add to the keyring.<br />
 <textarea name='pastekey' cols='55' rows='6'></textarea>
 <br />Upload your file directly: <input type='file' name='upkey' /><br />
+<input type='submit' /><br /></div><div class="capchaaddkey">
 <? if ($recaptcha_form_pubkey!="") {
       if ($captchavalid==FALSE)
          print("<p class=\"error\">reCAPTCHA said: ".$res->error.".</p>");
       echo recaptcha_get_html($recaptcha_form_pubkey)."<br />";
    }?>
-<input type='submit' /><br /></p></form></div>
+</div></form></div>
 <?
       print_footer();
    }
