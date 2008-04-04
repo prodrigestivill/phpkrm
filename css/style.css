@@ -47,11 +47,11 @@ li {
 }
 
 .formaddkey{
-  display: table-cell;
+  float: left;
 }
 
 .capchaaddkey{
-  display: table-cell;
+  float: left;
 }
 
 .keyring {
@@ -113,4 +113,9 @@ a.pubname:hover {
   text-align: center;
   font-style: italic;
   font-size: 0.9em;
+}
+
+.clear {
+  clear: both;
+  display: block;
 }

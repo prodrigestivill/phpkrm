@@ -273,7 +273,8 @@ function print_header($title){
 
 function print_footer(){
 ?>
-<div class='footer'>Keyring manager created by &copy;Pau Rodriguez-Estivill<br />
+<div class="clear"></div>
+<div class="footer">Keyring manager created by &copy;Pau Rodriguez-Estivill<br />
 PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</div>
 </body></html>
 <?
