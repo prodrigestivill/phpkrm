@@ -30,11 +30,17 @@ a:visited {
 
 li {
   list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul, .keyringoptions, .info, .error, .addkey{
+  margin-left: 0px;
+  padding-left: 3em;
 }
 
 .keyringoptions {
   padding-top: 1.3em;
-  padding-left: 3.2em;
 }
 
 .bodykeyring {

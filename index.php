@@ -106,8 +106,8 @@ if ($keyringid!=""){
 ?>
 </div><div class="addkey">
 <form method='post' action='<? echo $keyringid; ?>' enctype='multipart/form-data'>
-<div class="formaddkey" style='width: 35em'>Paste an ascii-armored of the key(s) to add in this keyring:<br />
-<textarea name='pastekey' cols='60' rows='5' style='width: 100%;'></textarea><br />
+<div class="formaddkey" style='width: 40em'>Paste an ascii-armored of the key(s) to add in this keyring:<br />
+<textarea name='pastekey' cols='65' rows='5' style='width: 100%;'></textarea><br />
 <span style='float:left;'>Or upload your key file directly:</span><span style='float: right;'><input type='file' name='upkey' /></span></div>
 <? if ($recaptcha_form_pubkey!="") { ?>
 <div class="capchaaddkey">
@@ -270,7 +270,7 @@ function print_header($title){
 
 function print_footer(){
 ?>
-<div class="clear"></div>
+<div class="clear"></div><br />
 <div class="footer">Keyring manager created by &copy;Pau Rodriguez-Estivill<br />
 PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</div>
 </body></html>
