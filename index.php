@@ -17,8 +17,7 @@ $q=((isset($_GET['q'])) ? $_GET['q'] : "");
 $param=split("/", $q);
 $keyringid=$param[0];
 //Check if keyring is correct.
-if (!($keyringid!="" && file_exists($dbpath.$keyringid) && 
-    preg_match("/^[A-Za-z0-9]*$/", $keyringid))){
+if (!($keyringid!="" && preg_match("/^[A-Za-z0-9_-]*$/", $keyringid) && file_exists($dbpath.$keyringid))){
    $keyringid="";
 }
 $linkbase=(($basehref=="") ? "?q=" : $basehref);
