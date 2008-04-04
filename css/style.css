@@ -47,12 +47,11 @@ li {
 }
 
 .formaddkey{
-  float: left;
+  display: table-cell;
 }
 
 .capchaaddkey{
-  float: right;
-  text-align: left;
+  display: table-cell;
 }
 
 .keyring {

@@ -110,13 +110,15 @@ if ($keyringid!=""){
 Paste an ascii-armored of the key(s) that you wish to add to the keyring.<br />
 <textarea name='pastekey' cols='55' rows='6'></textarea>
 <br />Upload your file directly: <input type='file' name='upkey' /><br />
-<input type='submit' /><br /></div><div class="capchaaddkey">
-<? if ($recaptcha_form_pubkey!="") {
-      if ($captchavalid==FALSE)
+<input type='submit' /><br /></div>
+<? if ($recaptcha_form_pubkey!="") { ?>
+<div class="capchaaddkey">
+<?    if ($captchavalid==FALSE)
          print("<p class=\"error\">reCAPTCHA said: ".$res->error.".</p>");
-      echo recaptcha_get_html($recaptcha_form_pubkey)."<br />";
-   }?>
-</div></form></div>
+      echo recaptcha_get_html($recaptcha_form_pubkey); ?>
+<br /></div>
+<? }?>
+</form></div>
 <?
       print_footer();
    }
