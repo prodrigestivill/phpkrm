@@ -117,7 +117,7 @@ Paste an ascii-armored of the key(s) that you wish to add to the keyring.<br />
       echo recaptcha_get_html($recaptcha_form_pubkey); ?>
 <br /></div>
 <? }?>
-<input type='submit' /><br /></form></div>
+<div class="clear"></div><input type='submit' /><br /></form></div>
 <?
       print_footer();
    }
