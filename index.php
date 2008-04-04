@@ -106,17 +106,16 @@ if ($keyringid!=""){
 ?>
 </div><div class="addkey">
 <form method='post' action='<? echo $keyringid; ?>' enctype='multipart/form-data'>
-<div class="formaddkey" style='width: 30em'>Paste an ascii-armored of the key(s) to add in this keyring:<br />
-<textarea name='pastekey' cols='55' rows='5' style='width: 100%;'></textarea><br />
-Or upload your key file directly: <span style='text-align: right;'><input type='file' name='upkey' /></span><br /></div>
+<div class="formaddkey" style='width: 35em'>Paste an ascii-armored of the key(s) to add in this keyring:<br />
+<textarea name='pastekey' cols='60' rows='5' style='width: 100%;'></textarea><br />
+<span style='float:left;'>Or upload your key file directly:</span><span style='float: right;'><input type='file' name='upkey' /></span></div>
 <? if ($recaptcha_form_pubkey!="") { ?>
 <div class="capchaaddkey">
 <?    if ($captchavalid==FALSE)
          print("<p class=\"error\">reCAPTCHA said: ".$res->error.".</p>");
-      echo recaptcha_get_html($recaptcha_form_pubkey); ?>
-<br /></div>
+      echo recaptcha_get_html($recaptcha_form_pubkey); ?></div>
 <? }?>
-<div class="clear"></div><input type='submit' /><br /></form></div>
+<br /><input type='submit' /><br /></form></div>
 <?
       print_footer();
    }
@@ -271,7 +270,6 @@ function print_header($title){
 
 function print_footer(){
 ?>
-<div class="clear"></div>
 <div class="footer">Keyring manager created by &copy;Pau Rodriguez-Estivill<br />
 PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.google.com/p/phpkrm/">avaliable</a>.</div>
 </body></html>
