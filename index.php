@@ -105,7 +105,7 @@ if ($keyringid!=""){
          print("</li></ul>");
 ?>
 </div><div class="addkey">
-<form method='post' action='<? echo $keyringid; ?>' enctype='multipart/form-data'>
+<form method='post' action='<? echo $linkbase.$keyringid; ?>' enctype='multipart/form-data'>
 <div class="formaddkey" style='width: 40em'>Paste an ascii-armored of the key(s) to add in this keyring:<br />
 <textarea name='pastekey' cols='65' rows='5' style='width: 100%;'></textarea><br />
 <span style='float:left;'>Or upload your key file directly:</span><span style='float: right;'><input type='file' name='upkey' /></span></div>
@@ -259,11 +259,11 @@ function print_keyring($line){
 }
 
 function print_header($title){
-   global $linkbase;
+   global $basehref;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head><title><? echo $title; ?></title>
-<style type="text/css" media="all">@import '<? echo $linkbase; ?>css/style.css';</style></head><body>
+<style type="text/css" media="all">@import '<? echo $basehref; ?>css/style.css';</style></head><body>
 <h1 class="title"><? echo $title; ?></h1>
 <?
 }
