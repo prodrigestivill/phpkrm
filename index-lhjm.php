@@ -94,7 +94,29 @@ if ($keyringid!=""){
       }
       }
 
+      //Generate photos
+      $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire,show-photos --photo-viewer \"/bin/cat > $dbpath/photo-%K.%t\" --no-default-keyring --keyring ".$keyringid;
+      $handle=popen($torun,"r");
+      pclose($handle);
+
+      //Show all small photos
+      $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
+      $handle=popen($torun,"r");
+      while(!feof($handle)) {
+	  $line=htmlspecialchars(fgets($handle,4096));
+          $field=split(":",$line);
+	  if ($field[0]=="pub") {
+	     if (file_exists("$dbpath/photo-$field[4].jpg")) {
+		list($width, $height, $type, $attr) = getimagesize("$dbpath/photo-$field[4].jpg");
+		print("<a href=\"javascript: PHOTO=window.open('$dbpath/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpath/photo-$field[4].jpg\" width=\"75\" height=\"75\"></a>");
+		print("&nbsp");
+	     } 
+          }
+      }
+      pclose($handle);
+      
       // List Keys
+      printf("<br><br>");
       $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
       $fistpub=TRUE;
       $handle=popen($torun,"r");
@@ -227,20 +249,30 @@ function print_keyring($line){
       case "pub":
          if ($fistpub==FALSE)
             print("</li></ul>");
+         printf("<br><hr>");
+
+	 //Show small photo
+	 global $dbpath;
+	 if (file_exists("$dbpath/photo-$field[4].jpg")) {
+		list($width, $height, $type, $attr) = getimagesize("$dbpath/photo-$field[4].jpg");
+		print("<a href=\"javascript: PHOTO=window.open('$dbpath/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpath/photo-$field[4].jpg\" width=\"75\" height=\"75\"></a>");
+	 } 
+
          print("\n<ul><li class=\"pub\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
-            print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">".tag_namefield("span","class=\"pubname\" title=\"".(($rev=="r") ? "[REVOCKED]" : "[EXPIRED]").$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]</del>");
+            print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">".tag_namefield("span","class=\"pubname\" title=\"".(($rev=="r") ? "[REVOCKED]" : "[EXPIRED]").$field[4]."\"",$field[9])." (".$field[5]." / ".$field[6].") [".$field[2]."bits]</del>");
          else
-            print(tag_namefield("a","class=\"pubname\" href=\"".$linkbase.$keyringid."/".$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."/".$field[6].") [".$field[2]."bits]");
+            print(tag_namefield("a","class=\"pubname\" href=\"".$linkbase.$keyringid."/".$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."".$field[6].") [".$field[2]."bits]");
          $fistpub=FALSE;
+	 printf(" $field[4] ");
          break;
       case "sub":
          print("\n<ul><li class=\"sub\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">");
-         print("<span class=\"subname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[4]."\">Subkey</span> (".$field[5]."/".$field[6].") [".$field[2]."bits]");
+         print("<span class=\"subname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[4]."\">Subkey</span> (".$field[5]." / ".$field[6].") [".$field[2]."bits]");
          if ($rev=="r" || $rev=="e")
             print("</del>");
          print("</li></ul>");
