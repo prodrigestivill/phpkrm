@@ -249,14 +249,17 @@ function print_keyring($line){
       case "pub":
          if ($fistpub==FALSE)
             print("</li></ul>");
-         printf("<br><hr>");
+         printf("<br><br><hr>");
 
 	 //Show small photo
 	 global $dbpath;
 	 if (file_exists("$dbpath/photo-$field[4].jpg")) {
 		list($width, $height, $type, $attr) = getimagesize("$dbpath/photo-$field[4].jpg");
-		print("<a href=\"javascript: PHOTO=window.open('$dbpath/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpath/photo-$field[4].jpg\" width=\"75\" height=\"75\"></a>");
+		print("<a href=\"javascript: PHOTO=window.open('$dbpath/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpath/photo-$field[4].jpg\" width=\"75\" height=\"75\" align=\"left\"></a>");
 	 } 
+	 else {
+	   print("<img src=\"css/nophoto.jpg\" width=\"79\" height=\"79\" align=\"left\"></a>");
+	 }
 
          print("\n<ul><li class=\"pub\">");
          $rev=substr($field[1], 0, 1);
