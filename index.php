@@ -60,7 +60,7 @@ if ($keyringid!=""){
           print_header($keyringid." keyring");
       }
 ?>
-<div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a></div><div class="bodykeyring" id="keyring<? echo $keyringid; ?>">
+<div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a>&nbsp;|&nbsp;<a class="keyring" href="<? echo $linkbase; ?>">List of keyrings</a></div><div class="bodykeyring" id="keyring<? echo $keyringid; ?>">
 <?
       if ($recaptcha_form_privkey!="" && ($pastekey!="" || $filekey!="")){
          $res=recaptcha_check_answer($recaptcha_form_privkey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
