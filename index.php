@@ -59,6 +59,9 @@ if ($keyringid!=""){
       }else{
           print_header($keyringid." keyring");
       }
+
+      //Show keyring logo / $keyringid-logo.png
+      print("<img src=\"$dbpath/$keyringid-logo.png\" width=\"192\" height=\"209\" align=\"right\" vspace=\"10\"></a>");
 ?>
 <div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a>&nbsp;|&nbsp;<a class="keyring" href="<? echo $linkbase; ?>">List of keyrings</a></div><div class="bodykeyring" id="keyring<? echo $keyringid; ?>">
 <?
