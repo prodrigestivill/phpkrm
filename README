@@ -12,7 +12,8 @@ Install
     * Configure config.php
     * For Rewrite:
           o Configure $basehref at config.php
-          o Configure RewriteBase at .htaccess 
+          o Configure RewriteBase at .htaccess
+          o Configure $login and $pass for access to keyring manage page 
     * Create the keyrings folder ($dbpath) with permissions of www user
     * Create empty files in the previous folder with the name of keyrings
           o The keyring name must be only alphanumeric and/or the characters

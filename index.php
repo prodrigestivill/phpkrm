@@ -1,3 +1,4 @@
+<? ob_start(); ?>
 <? 
 /*
  * PHPkrm is a Web-based GnuPG keyring manager.
@@ -13,6 +14,8 @@ if ($recaptcha_mail_pubkey!="" || $recaptcha_mail_privkey!="" || $recaptcha_form
    require_once ("recaptchalib.php");
 $pastekey=((isset($_POST['pastekey'])) ? $_POST['pastekey'] : "");
 $filekey=((isset($_FILES['upkey']['tmp_name'])) ? $_FILES['upkey']['tmp_name'] : "");
+$newkeyring=((isset($_POST['newkeyring'])) ? $_POST['newkeyring'] : "");
+$oldkeyring=((isset($_POST['oldkeyring'])) ? $_POST['oldkeyring'] : "");
 $q=((isset($_GET['q'])) ? $_GET['q'] : "");
 $param=split("/", $q);
 $keyringid=$param[0];
@@ -155,7 +158,31 @@ if ($keyringid!=""){
        print("\n<!-- End header file list.php -->\n");
    }else{
        print_header("List of keyrings");
-   }
+	   
+?> 
+<div class="login"><ul>
+<form action ="<? echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
+<b>Login:</b><input type="text" name="userid" size="10" maxlength="20" />
+<b>Pass:</b><input type="password" name="userpass" size="10" maxlength="20"/>
+<input type="submit" name="Manage keyrings" id="submit" value="Manage keyrings" onClick="window.location.href=window.location.href" style="boarder: lpx solid gray; background-color: white" />
+
+<?	
+
+	if ((isset($_POST['userid'])) && (isset($_POST['userpass']))){
+		if (($_POST['userid']!="") && ($_POST['userpass']!="")){
+			if (($_POST['userid']=="$login") && ($_POST['userpass']=="$pass")){
+				header("Location: admin.php");
+				}
+				else {
+					if (($_POST['userid']!="$login") || ($_POST['userpass']!="$pass"))		
+						print("<li class=\"loginerror\">Wrong login.</li>");
+					}
+				
+		}
+	} else print("");
+	
+?></div></ul><?
+}
 ?>
 <div class="bodykeyrings" id="keyringslist"><ul>
 <?
@@ -334,3 +361,5 @@ PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.goog
 <?
 }
 ?>
+<? ob_flush(); ?>
+

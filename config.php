@@ -12,8 +12,10 @@
 $gpgbin="/usr/bin/gpg";
 $keyserver=""; //Specify FQDN if you want to syncronize with a keyserver
 $sendkeyserver=""; //Specify FQDN if you want to send new keys to a keyserver
-$dbpath="/var/keyrings/"; //Where to save the keyrings with end /
+$dbpath="keyrings/"; //Where to save the keyrings with end /
 $basehref="";//Path in HTTP to use if you use rewrite else don't use.
+$login=""; //Type user name who can manage with keyrings
+$pass=""; //Type password to login to manage window
 
 //Anti-SPAM substitutions in html and txt mode
 $AThtml="<b>&nbsp;&nbsp;AT&nbsp;&nbsp;</b>";
