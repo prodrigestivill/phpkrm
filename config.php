@@ -13,6 +13,7 @@ $gpgbin="/usr/bin/gpg";
 $keyserver=""; //Specify FQDN if you want to syncronize with a keyserver
 $sendkeyserver=""; //Specify FQDN if you want to send new keys to a keyserver
 $dbpath="keyrings/"; //Where to save the keyrings with end /
+$dbgraph="weboftrust/"; //Where are saved pictures of web of trust.
 $basehref="";//Path in HTTP to use if you use rewrite else don't use.
 $login=""; //Type user name who can manage with keyrings
 $pass=""; //Type password to login to manage window

@@ -1,0 +1,7 @@
+# $1 name of keyring
+
+gpg --list-sigs --no-default-keyring --keyring ./keyrings/$1 | ./sig2dot.pl > $1.dot
+neato -Tps $1.dot > $1.ps
+convert -size 1024x768 $1.ps $1.jpg
+cp -u $1.jpg weboftrust
+rm $1.dot $1.ps $1.jpg

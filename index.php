@@ -41,6 +41,10 @@ if ($keyringid!=""){
       //Refresh keys from keyserver
       main_refresh($keyringid);
       break;
+    case "graph":
+      //Print graph of keyring relations
+      main_graph($keyringid,"");
+      break;
     default:
       if (!isset($param[2]))
          $param[2]="download";
@@ -51,6 +55,9 @@ if ($keyringid!=""){
          case "download":
             main_download($keyringid,$param[1]);
             break;
+	 case "graph":
+	    main_graph($keyringid);
+	    break;
       }
       break;
    }
@@ -70,7 +77,7 @@ if ($keyringid!=""){
       else   
 
 ?>
-<div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a>&nbsp;|&nbsp;<a class="keyring" href="<? echo $linkbase; ?>">List of keyrings</a></div><div class="bodykeyring" id="keyring<? echo $keyringid; ?>">
+<div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a>&nbsp;|&nbsp;<a class="graph" href="<? echo $linkbase.$keyringid; ?>/graph">Show keyrings relations</a>&nbsp;|&nbsp;<a class="keyring" href="<? echo $linkbase; ?>">List of keyrings</a></div>
 <?
       if ($recaptcha_form_privkey!="" && ($pastekey!="" || $filekey!="")){
          $res=recaptcha_check_answer($recaptcha_form_privkey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
@@ -188,8 +195,9 @@ if ($keyringid!=""){
 <?
    if ($handle=opendir($dbpath)) {
     while(false !== ($lkrid=readdir($handle))){
-     if (preg_match("/^[A-Za-z0-9]+$/", $lkrid))
+     if (preg_match("/^[A-Za-z0-9]+$/", $lkrid)){
          print("<li><a class='keyring' href='".$linkbase.$lkrid."'>".$lkrid." keyring</a></li>");
+      }
     }
    closedir($handle);
    }else
@@ -242,6 +250,31 @@ function main_print($keyringid,$keyid){
    while(!feof($handle))
       print(preg_replace("/ \<(.+)@(.+)\.(.+)\>/",$replacestr,fgets($handle,4096)));
    pclose($handle);
+}
+
+function main_graph($keyringid,$keyid){
+   global $dbpath,$dbgraph,$gpgbin;
+   header('Content-type: image/jpeg');
+   $photofile = ("$dbgraph$keyringid.jpg");
+   $nophotofile = ("css/nowot.jpg");
+   $nophoto = imagecreatefromjpeg($nophotofile);
+if (file_exists($photofile)) {
+   $togen = shell_exec("./map.generate ".$keyringid);
+   $photo = imagecreatefromjpeg($photofile);
+   $size = filesize ($dbgraph.$keyringid.".jpg");
+   if ($size < 200){
+      imagejpeg($nophoto, NULL, 100);
+      //imagedestroy($nophoto);
+      unlink($nophoto);
+}
+    imagejpeg($photo, NULL, 100);
+    imagedestroy($photo);
+
+} else {
+      imagejpeg($nophoto, NULL, 100);
+      //imagedestroy($nophoto);
+      unlink($nophoto);
+  }
 }
 
 function get_keyringurl(){
@@ -362,4 +395,5 @@ PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.goog
 }
 ?>
 <? ob_flush(); ?>
+
 

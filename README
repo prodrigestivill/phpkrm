@@ -18,6 +18,7 @@ Install
     * Create empty files in the previous folder with the name of keyrings
           o The keyring name must be only alphanumeric and/or the characters
           o Files must be owned by www user 
+    * Put sig2dot.pl to installed folder
     * Add to crontab wget http://localhost/PATH/?q=KEYRING/refresh to sync with the keyserver to refresh keys UID's and optionaly send all keys to it 
 
 Requieres
@@ -26,6 +27,7 @@ Requieres
     * GnuPG
     * Apache Rewrite (Optional)
     * reCAPTCHA PHP library (Optional) 
+    * sig2dot
 
 Customizations
 
