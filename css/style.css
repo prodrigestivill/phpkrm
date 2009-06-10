@@ -36,14 +36,15 @@ li {
 
 ul, .keyringoptions, .info, .error, .addkey{
   margin-left: 0px;
-  padding-left: 3em;
+  padding-left: 4em;
 }
 
 .keyringoptions {
   padding-top: 1.3em;
 }
 
-.bodykeyring {
+.bodykeyrings {
+  left: 200px;
   padding-top: 1.3em;
 }
 
@@ -67,6 +68,11 @@ ul, .keyringoptions, .info, .error, .addkey{
   padding-left: 18px;
 }
 
+.graph {
+  background: url(graphviz_icon.png) center left no-repeat;
+  padding-left: 18px;
+}
+
 .download {
   background: url(save_icon.gif) center left no-repeat;
   padding-left: 18px;
@@ -74,6 +80,7 @@ ul, .keyringoptions, .info, .error, .addkey{
 
 .print {
   background: url(print_icon.gif) center left no-repeat;
+  text-indent: 80px;
   padding-left: 18px;
 }
 
@@ -84,7 +91,7 @@ ul, .keyringoptions, .info, .error, .addkey{
 
 .pubname {
   background: url(user_icon.gif) center left no-repeat;
-  padding-left: 18px;
+  padding-left: 20px;
   font-weight: bold;
 }
 
@@ -92,12 +99,29 @@ a.pubname:hover {
   background: url(save_icon.gif) center left no-repeat;
 }
 
+.pub {
+  text-indent: 20px;
+  font-style: Bold;
+}
+
 .sub, .uid {
+  text-indent: 30px;
+  font-style: bold;
+}
+
+.sig {
+  text-indent: 40px;
   font-style: italic;
 }
 
 .subname, .uidname {
   font-weight: bold;
+}
+
+.signame {
+  text-indent: 80px;
+  font-weight: bold;
+  color: Maroon;
 }
 
 .rev, .exp {
@@ -127,3 +151,49 @@ a.pubname:hover {
   clear: both;
   display: block;
 }
+
+.login{
+  color: black;
+  text-decoration: BOLD;
+  font-size: 1.1em;
+  position:fixed;
+  top:5px;
+  right:5px;
+}
+
+.managehead{
+  font-size: 1.1em;
+  position:fixed;
+  top:5px;
+  left:5px;
+}
+
+.manage{
+  font-size: 1.0em;
+  position:fixed;
+  top:10px;
+  left:200px;
+}
+
+.exitbutton{
+  font-size: 1.0em;
+  position:fixed;
+  top:200px;
+  left:400px;
+}
+
+.buttons {
+  position:fixed;
+  top:2px;
+  right:5px;
+}
+
+.loginerror {
+  color: red;
+  font-weight: bold;
+  font-style: italic;
+  position:fixed;
+  top:60px;
+  right:100px;
+  }
+
