@@ -61,7 +61,11 @@ if ($keyringid!=""){
       }
 
       //Show keyring logo / $keyringid-logo.png
-      print("<img src=\"$dbpath/$keyringid-logo.png\" width=\"192\" height=\"209\" align=\"right\" vspace=\"10\"></a>");
+      $logoimg = ("$dbpath$keyringid-logo.png");
+      if (file_exists($logoimg))
+      print("<img src=\"$dbpath/$keyringid-logo.png\" width=\"150\" height=\"100\" align=\"right\" vspace=\"10\"></a>");
+      else   
+
 ?>
 <div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a>&nbsp;|&nbsp;<a class="keyring" href="<? echo $linkbase; ?>">List of keyrings</a></div><div class="bodykeyring" id="keyring<? echo $keyringid; ?>">
 <?
@@ -120,7 +124,7 @@ if ($keyringid!=""){
       
       // List Keys
       printf("<br><br>");
-      $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
+      $torun=$gpgbin." --display-charset utf-8 --list-sig --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid;
       $fistpub=TRUE;
       $handle=popen($torun,"r");
       while(!feof($handle))
@@ -293,6 +297,21 @@ function print_keyring($line){
             print("</del>");
          print("</li></ul>");
          break;
+      case "sig":
+	print("\n<ul><li class=\"sig\">");
+	$adress="http://pgpkeys.pca.dfn.de/pks/lookup?search=0x";
+	$rev=substr($field[1], 0, 1);
+	if ($rev=="r" || $rev=="e")
+	    print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">");
+	if ($field[9]=="[User ID not found]"){
+	?><a href="<? print ($adress.$field[4]."&op=index") ?>">UNKNOWN </a><?
+	}
+	print(tag_namefield("span","class=\"signame\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[7]."\"",$field[9])." (".$field[5]." / ".$field[6].")");
+	if ($rev=="r" || $rev=="e")
+	    print("</del>");
+	print("</li></ul>");
+	break;
+
    }
 }
 
