@@ -40,11 +40,17 @@ ul, .keyringoptions, .info, .error, .addkey{
 }
 
 .keyringoptions {
+
+  padding-top: 1.3em;
+}
+
+.bodykeyrings {  
+  left:200px;
   padding-top: 1.3em;
 }
 
 .bodykeyrings {
-  left: 200px;
+  left:200px;
   padding-top: 1.3em;
 }
 
@@ -68,9 +74,19 @@ ul, .keyringoptions, .info, .error, .addkey{
   padding-left: 18px;
 }
 
+.refresh {
+  background: url(refresh_icon.png) center left no-repeat;
+  padding-left: 18px;
+}
+
 .graph {
   background: url(graphviz_icon.png) center left no-repeat;
   padding-left: 18px;
+}
+
+.keyringman {
+  background: url(keyring_icon.gif) center left no-repeat;
+  padding-left: 30px;
 }
 
 .download {
@@ -133,7 +149,7 @@ a.pubname:hover {
 }
 
 .error {
-  color: red;
+
   font-weight: bold;
   font-style: italic;
 }
@@ -196,4 +212,4 @@ a.pubname:hover {
   top:60px;
   right:100px;
   }
-
+ 

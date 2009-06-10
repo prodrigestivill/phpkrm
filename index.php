@@ -9,6 +9,7 @@
  * This software is licensed under the GNU General Public License.
  * See COPYING for details.
  */
+
 require('config.php');
 if ($recaptcha_mail_pubkey!="" || $recaptcha_mail_privkey!="" || $recaptcha_form_pubkey!="" || $recaptcha_form_privkey!="")
    require_once ("recaptchalib.php");
@@ -26,6 +27,7 @@ if (!($keyringid!="" && preg_match("/^[A-Za-z0-9_-]*$/", $keyringid) && file_exi
 $linkbase=(($basehref=="") ? "?q=" : $basehref);
 putenv("GNUPGHOME=".$dbpath);
 
+
 if ($keyringid!=""){
    if (isset($param[1]) && preg_match("/^[A-Za-z0-9]+$/", $param[1]))
    switch ($param[1]){
@@ -39,21 +41,29 @@ if ($keyringid!=""){
        break;
     case "refresh":
       //Refresh keys from keyserver
-      main_refresh($keyringid);
+      main_refresh($keyringid,"");
       break;
     case "graph":
       //Print graph of keyring relations
       main_graph($keyringid,"");
       break;
+
     default:
       if (!isset($param[2]))
-         $param[2]="download";
+         $param[2]="show";
       switch ($param[2]){
+	 case "show":
+	    main_details($keyringid, $param[1]);
+	    break;
+	 case "refresh":
+	    //Refresh keys from keyserver
+	    main_refresh($keyringid,$param[1]);
+	    break;
          case "print":
-            main_print($keyringid, $param[1]);
+            main_print($keyringid,$param[1]);
             break;
          case "download":
-            main_download($keyringid,$param[1]);
+            main_download($keyringid, $param[1]);
             break;
 	 case "graph":
 	    main_graph($keyringid);
@@ -71,13 +81,15 @@ if ($keyringid!=""){
       }
 
       //Show keyring logo / $keyringid-logo.png
-      $logoimg = ("$dbpath$keyringid-logo.png");
+      $logoimg = ("$dbpic$dblogo$keyringid-logo.png");
       if (file_exists($logoimg))
-      print("<img src=\"$dbpath/$keyringid-logo.png\" width=\"150\" height=\"100\" align=\"right\" vspace=\"10\"></a>");
+      print("<img src=\"$dbpic$dblogo/$keyringid-logo.png\" width=\"150\" height=\"100\" align=\"right\" vspace=\"10\"></a>");
       else   
 
 ?>
 <div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid; ?>/download">Download all</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid; ?>/print">Printing version</a>&nbsp;|&nbsp;<a class="graph" href="<? echo $linkbase.$keyringid; ?>/graph">Show keyrings relations</a>&nbsp;|&nbsp;<a class="keyring" href="<? echo $linkbase; ?>">List of keyrings</a></div>
+
+
 <?
       if ($recaptcha_form_privkey!="" && ($pastekey!="" || $filekey!="")){
          $res=recaptcha_check_answer($recaptcha_form_privkey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
@@ -112,7 +124,7 @@ if ($keyringid!=""){
       }
 
       //Generate photos
-      $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire,show-photos --photo-viewer \"/bin/cat > $dbpath/photo-%K.%t\" --no-default-keyring --keyring ".$keyringid;
+      $torun=$gpgbin." --display-charset utf-8 --list-public-keys --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-sig-expire,show-photos --photo-viewer \"/bin/cat > $dbpic/$dbphoto/photo-%K.%t\" --no-default-keyring --keyring ".$keyringid;
       $handle=popen($torun,"r");
       pclose($handle);
 
@@ -123,9 +135,9 @@ if ($keyringid!=""){
 	  $line=htmlspecialchars(fgets($handle,4096));
           $field=split(":",$line);
 	  if ($field[0]=="pub") {
-	     if (file_exists("$dbpath/photo-$field[4].jpg")) {
-		list($width, $height, $type, $attr) = getimagesize("$dbpath/photo-$field[4].jpg");
-		print("<a href=\"javascript: PHOTO=window.open('$dbpath/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpath/photo-$field[4].jpg\" width=\"75\" height=\"75\"></a>");
+	     if (file_exists("$dbpic$dbphoto/photo-$field[4].jpg")) {
+		list($width, $height, $type, $attr) = getimagesize("$dbpic$dbphoto/photo-$field[4].jpg");
+		print("<a href=\"javascript: PHOTO=window.open('$dbpic$dbphoto/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpic$dbphoto/photo-$field[4].jpg\" width=\"70\" height=\"80\"></a>");
 		print("&nbsp");
 	     } 
           }
@@ -142,6 +154,7 @@ if ($keyringid!=""){
       pclose($handle);
       if ($fistpub==FALSE)
          print("</li></ul>");
+
 ?>
 </div><div class="addkey">
 <form method='post' action='<? echo $linkbase.$keyringid; ?>' enctype='multipart/form-data'>
@@ -197,11 +210,14 @@ if ($keyringid!=""){
     while(false !== ($lkrid=readdir($handle))){
      if (preg_match("/^[A-Za-z0-9]+$/", $lkrid)){
          print("<li><a class='keyring' href='".$linkbase.$lkrid."'>".$lkrid." keyring</a></li>");
+	}
       }
-    }
-   closedir($handle);
+   
+    closedir($handle);
    }else
      print("<li class=\"error\">Can't list directory.</li>");
+
+	 
 ?>
 </ul></div>
 <?
@@ -217,7 +233,7 @@ function main_download($keyringid,$keyid){
       print("Error using gpg. Contact admin.");
 }
 
-function main_refresh($keyringid){
+function main_refresh($keyringid,$keyid){
    global $gpgbin,$keyserver,$sendkeyserver;
    if ($keyserver!=""){
       Header("Content-type: text/plain"); 
@@ -231,6 +247,34 @@ function main_refresh($keyringid){
       }
    }
 }
+
+function main_details($keyringid,$keyid){
+    global $gpgbin,$dbpath,$linkbase;
+	Header("Content-type: text/html; charset=UTF-8");
+	if (file_exists($dbpath.$keyringid.".php")){
+	    include($dbpath.$keyringid.".php");
+	    print("\n<!-- End header file ".$keyringid.".php -->\n);
+	}else{
+	    print_header(".$keyringid." keyring");
+	}
+
+?>
+<div class="keyringoptions"><a class="download" href="<? echo $linkbase.$keyringid."/".$keyid; ?>/download">Download</a>&nbsp;|&nbsp;<a class="print" href="<? echo $linkbase.$keyringid."/".$keyid; ?>/print">Printing version</a>
+<?
+	
+	$torun=$gpgbin." --display-charset utf-8 --list-sigs --list-options show-uid-validity,show-unusable-uids,show-unusable-subkeys,show-keyring,show-sig-expire --with-colons --no-default-keyring --keyring ".$keyringid." ".$keyid;
+	$handle=popen($torun,"r");
+	$fistpub=TRUE;
+	while(!feof($handle)){
+	  print_keyring(htmlspecialchars(fgets($handle,4096)));
+	       }
+	pclose($handle);
+        if ($fistpub==FALSE)
+	print("</li></ul>");
+
+	print_footer();
+}
+
 
 function main_print($keyringid,$keyid){
    global $gpgbin,$dbpath,$recaptcha_mail_pubkey,$recaptcha_mail_privkey,$ATtxt,$DOTtxt;
@@ -253,18 +297,17 @@ function main_print($keyringid,$keyid){
 }
 
 function main_graph($keyringid,$keyid){
-   global $dbpath,$dbgraph,$gpgbin;
+   global $dbpic,$gpgbin,$dbgenpath;
    header('Content-type: image/jpeg');
-   $photofile = ("$dbgraph$keyringid.jpg");
-   $nophotofile = ("css/nowot.jpg");
+   $photofile = ("$dbpic$dbgenpath$keyringid.jpg");
+   $nophotofile = ("./css/nowot.jpg");
    $nophoto = imagecreatefromjpeg($nophotofile);
 if (file_exists($photofile)) {
    $togen = shell_exec("./map.generate ".$keyringid);
    $photo = imagecreatefromjpeg($photofile);
-   $size = filesize ($dbgraph.$keyringid.".jpg");
+   $size = filesize("$dbpic$dbgenpath$keyringid.jpg");
    if ($size < 200){
       imagejpeg($nophoto, NULL, 100);
-      //imagedestroy($nophoto);
       unlink($nophoto);
 }
     imagejpeg($photo, NULL, 100);
@@ -272,7 +315,6 @@ if (file_exists($photofile)) {
 
 } else {
       imagejpeg($nophoto, NULL, 100);
-      //imagedestroy($nophoto);
       unlink($nophoto);
   }
 }
@@ -319,30 +361,30 @@ function print_keyring($line){
          printf("<br><br><hr>");
 
 	 //Show small photo
-	 global $dbpath;
-	 if (file_exists("$dbpath/photo-$field[4].jpg")) {
-		list($width, $height, $type, $attr) = getimagesize("$dbpath/photo-$field[4].jpg");
-		print("<a href=\"javascript: PHOTO=window.open('$dbpath/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpath/photo-$field[4].jpg\" width=\"75\" height=\"75\" align=\"left\"></a>");
-	 } 
-	 else {
-	   print("<img src=\"css/nophoto.jpg\" width=\"79\" height=\"79\" align=\"left\"></a>");
+	 global $dbpath,$dbpic,$dbphoto;
+	 if (file_exists("$dbpic$dbphoto/photo-$field[4].jpg")) {
+		list($width, $height, $type, $attr) = getimagesize("$dbpic$dbphoto/photo-$field[4].jpg");
+		print("<a href=\"javascript: PHOTO=window.open('$dbpic$dbphoto/photo-$field[4].jpg', 'foto', 'width=$width, height=$height, toolbar=no, status=no, location=no, menubar=no, resizable=no, scrollbars=no'); PHOTO.focus();\"><img src=\"$dbpic$dbphoto/photo-$field[4].jpg\" width=\"70\" height=\"80\" align=\"left\"></a>");
 	 }
-
-         print("\n<ul><li class=\"pub\">");
+	else {
+	    print("<img src=\"css/nophoto.jpg\" width=\"75\" height=\"65\" align=\"left\"></a>");
+	}
+	  print("\n<ul><li class=\"pub\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">".tag_namefield("span","class=\"pubname\" title=\"".(($rev=="r") ? "[REVOCKED]" : "[EXPIRED]").$field[4]."\"",$field[9])." (".$field[5]." / ".$field[6].") [".$field[2]."bits]</del>");
          else
-            print(tag_namefield("a","class=\"pubname\" href=\"".$linkbase.$keyringid."/".$field[4]."\" title=\"".$field[4]."\"",$field[9])." (".$field[5]."".$field[6].") [".$field[2]."bits]");
+         print(tag_namefield("a","class=\"pubname\" href=\"".$linkbase.$keyringid."/".$field[4]."\" title=\"".$field[4]."\"",$field[9])."(".$field[5]."".$field[6].") [".$field[2]."bits]");
          $fistpub=FALSE;
 	 printf(" $field[4] ");
-         break;
+	 break;
+ 
       case "sub":
          print("\n<ul><li class=\"sub\">");
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">");
-         print("<span class=\"subname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[4]."\">Subkey</span> (".$field[5]." / ".$field[6].") [".$field[2]."bits]");
+	 print("<span class=\"subname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[4]."\">Subkey</span> (".$field[5]." / ".$field[6].") [".$field[2]." bits]");
          if ($rev=="r" || $rev=="e")
             print("</del>");
          print("</li></ul>");
@@ -352,11 +394,12 @@ function print_keyring($line){
          $rev=substr($field[1], 0, 1);
          if ($rev=="r" || $rev=="e")
             print("<del class=\"".(($rev=="r") ? "rev" : "exp")."\">");
-         print(tag_namefield("span","class=\"uidname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[7]."\"",$field[9])." (".$field[5]."/".$field[6].")");
+	 print(tag_namefield("span","class=\"uidname\" title=\"".(($rev=="r") ? "[REVOCKED]" : (($rev=="e") ? "[EXPIRED]" : "")).$field[7]."\"",$field[9])." (".$field[5]." / ".$field[6].")");
          if ($rev=="r" || $rev=="e")
             print("</del>");
          print("</li></ul>");
          break;
+
       case "sig":
 	print("\n<ul><li class=\"sig\">");
 	$adress="http://pgpkeys.pca.dfn.de/pks/lookup?search=0x";
@@ -395,5 +438,4 @@ PHPkrm project is licensed under GNU/GPL and source is <a href="http://code.goog
 }
 ?>
 <? ob_flush(); ?>
-
 

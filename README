@@ -15,9 +15,9 @@ Install
           o Configure RewriteBase at .htaccess
           o Configure $login and $pass for access to keyring manage page 
     * Create the keyrings folder ($dbpath) with permissions of www user
-    * Create empty files in the previous folder with the name of keyrings
           o The keyring name must be only alphanumeric and/or the characters
-          o Files must be owned by www user 
+    * Create the img folder ($dbpath) with permissions of www user
+    and there folders logo, photo and weboftrust with same permissions
     * Put sig2dot.pl to installed folder
     * Add to crontab wget http://localhost/PATH/?q=KEYRING/refresh to sync with the keyserver to refresh keys UID's and optionaly send all keys to it 
 
