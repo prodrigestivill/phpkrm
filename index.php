@@ -302,20 +302,20 @@ function main_graph($keyringid,$keyid){
    $photofile = ("$dbpic$dbgenpath$keyringid.jpg");
    $nophotofile = ("./css/nowot.jpg");
    $nophoto = imagecreatefromjpeg($nophotofile);
-if (file_exists($photofile)) {
    $togen = shell_exec("./map.generate ".$keyringid);
+if (file_exists($photofile)) {
    $photo = imagecreatefromjpeg($photofile);
    $size = filesize("$dbpic$dbgenpath$keyringid.jpg");
    if ($size < 200){
       imagejpeg($nophoto, NULL, 100);
-      unlink($nophoto);
+      imagedestroy($nophoto);
 }
     imagejpeg($photo, NULL, 100);
     imagedestroy($photo);
 
 } else {
       imagejpeg($nophoto, NULL, 100);
-      unlink($nophoto);
+      imagedestroy($nophoto);
   }
 }
 
